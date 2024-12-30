@@ -1,0 +1,30 @@
+{
+    "name": "markone496/admin",
+    "description": "Quickly Build a Backend Framework",
+    "version": "1.0.0",
+    "type": "library",
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "lz\\admin\\": "src/"
+        },
+        "files": [
+            "src/function.php"
+        ]
+    },
+    "require": {
+        "php": "^7.3",
+        "laravel/framework": "^8.5",
+        "mews/captcha": "^3.3",
+        "predis/predis": "^2.0"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "lz\\admin\\LzAdminProvider"
+            ]
+        }
+    }
+}
