@@ -38,7 +38,7 @@ composer create-project laravel/laravel admin
 ```
 - 下载包、进入项目目录，运行以下命令
 ```
-composer require lz/admin
+composer require markone496/admin
 ```
 - 发布配置文件
 ```
