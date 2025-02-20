@@ -777,34 +777,4 @@ class BaseModelController extends Controller
         }
     }
 
-    /**
-     * 调用api
-     * @param $path
-     * @param $data
-     * @return mixed|null
-     */
-    public static function httpApi($path, $data)
-    {
-        try {
-            $url = env('API_URL');
-//            $url = 'http://172.24.170.153:8400';
-            $data['pwd'] = 'a1d2m3i4n5';
-            $re = Http::post($url . $path, $data);
-            $body = $re->body();
-            if (!is_string($body)) {
-                return null;
-            }
-            $arr = json_decode($re->body(), true);
-
-            if (!is_array($arr) || !isset($arr['code']) || !isset($arr['msg'])) {
-                return null;
-            }
-
-            return $arr;
-
-        } catch (\Exception $e) {
-            return null;
-        }
-    }
-
 }
