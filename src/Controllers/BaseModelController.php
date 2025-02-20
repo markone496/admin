@@ -141,7 +141,8 @@ class BaseModelController extends Controller
                 'width' => empty($item['width']) ? 100 : $item['width'],
                 'align' => $item['align'],
                 'fixed' => $item['fixed'],
-                'sort' => $item['sort']
+                'sort' => $item['sort'],
+                'escape' => empty($item['sort']) ? false : true
             ];
             if (!empty($item['show_type'])) {
                 $temp['escape'] = false;
