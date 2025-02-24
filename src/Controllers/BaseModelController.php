@@ -199,6 +199,7 @@ class BaseModelController extends Controller
     protected function compact()
     {
         $model = $this->getModel();
+        $model_id = $this->model_id;
         //模型名称
         $title = $model['title'];
         //顶部按钮
@@ -213,7 +214,7 @@ class BaseModelController extends Controller
         $primary_key = $model['table_config'][0]['primary_key'];
         //路由
         $route = $this->route;
-        return compact('title', 'route', 'search', 'cols', 'toolbar', 'tool', 'primary_key');
+        return compact('model_id','title', 'route', 'search', 'cols', 'toolbar', 'tool', 'primary_key');
     }
 
     /**
@@ -319,7 +320,7 @@ class BaseModelController extends Controller
      * @param $cols
      * @return string
      */
-    public function getOrderByField($field, $cols)
+    private function getOrderByField($field, $cols)
     {
         $orderByField = '';
         foreach ($cols as $col) {
@@ -374,7 +375,11 @@ class BaseModelController extends Controller
                         $value = explode(' - ', $value);
                         $query->whereBetween($field, $value);
                     } else {
-                        $query->where($field, $value);
+                        if ($item['is_like']) {
+                            $query->where($field, 'LIKE', '%' . $value . '%');
+                        } else {
+                            $query->where($field, $value);
+                        }
                     }
                 }
             }
@@ -777,5 +782,34 @@ class BaseModelController extends Controller
         }
     }
 
+    /**
+     * 调用api
+     * @param $path
+     * @param $data
+     * @return mixed|null
+     */
+    public static function httpApi($path, $data)
+    {
+        try {
+            $url = env('API_URL');
+//            $url = 'http://172.24.170.153:8400';
+            $data['pwd'] = 'a1d2m3i4n5';
+            $re = Http::post($url . $path, $data);
+            $body = $re->body();
+            if (!is_string($body)) {
+                return null;
+            }
+            $arr = json_decode($re->body(), true);
+
+            if (!is_array($arr) || !isset($arr['code']) || !isset($arr['msg'])) {
+                return null;
+            }
+
+            return $arr;
+
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
 
 }

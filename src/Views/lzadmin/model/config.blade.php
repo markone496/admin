@@ -81,7 +81,7 @@
                                                 </div>
                                             @elseif($key == 'tool_config')
                                                 <div class="layui-text-em" style="padding: 4px 0;">
-                                                    内置3个方法：详情【info】、编辑【update】、批量删除【delete】
+                                                    内置3个方法：详情【info】、编辑【update】、删除【delete】
                                                 </div>
                                             @elseif($key == 'form_config' || $key == 'info_config' )
                                                 <div class="layui-input-inline">

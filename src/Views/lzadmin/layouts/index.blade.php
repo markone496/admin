@@ -62,12 +62,27 @@
     <script>
         layui.use(function () {
             var dropdown = layui.dropdown;
+            var model_id = "{{$model_id}}";
             var primary_key = "{{$primary_key}}";
+            var cols = @json($cols);
+            let colsData = [];
+            var tableCols = localStorage.getItem('tableCols-'+ model_id);
+            if (tableCols) {
+                tableCols = JSON.parse(tableCols);
+            } else {
+                tableCols = {};
+            }
+            $(cols).each(function (index, item) {
+                if (tableCols[item.field]) {
+                    item.hide = true
+                }
+                colsData[index] = item;
+            });
             var table = com.table(
                 {
                     title: '{{$title}}',
                     url: '{{$route}}list',
-                    cols: [@json($cols)],
+                    cols: [colsData],
                 },
                 {
                     toolbar: function (obj, func) {
@@ -108,11 +123,21 @@
                                     }
                                 });
                             });
+                        } else if (obj.event === 'LAYTABLE_COLS') {
+                            $('.layui-table-tool-panel').on('click', 'li', function () {
+                                let data = {};
+                                $(obj.config.cols[0]).each(function (index, item) {
+                                    if (item.hide) {
+                                        data[item.field] = item.hide;
+                                    }
+                                });
+                                localStorage.setItem('tableCols-' + model_id, JSON.stringify(data));
+                            });
                         } else {
                             if (typeof window[obj.event] === 'function') {
                                 window[obj.event](obj, func);
                             } else {
-                                layer.msg(obj.event + '函数未定义', {icon: 2});
+                                console.log(obj.event + '函数未定义');
                             }
                         }
                     },

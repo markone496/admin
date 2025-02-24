@@ -27,7 +27,7 @@
                             </colgroup>
                             <thead>
                             <tr>
-                                <th>#</th>
+                                <th><input type="checkbox" lay-filter="choseAll"></th>
                                 <th>表名</th>
                                 <th>备注</th>
                             </tr>
@@ -62,6 +62,16 @@
             form.on('submit(submit)', function (data) {
                 call && call(data.field);
                 return false;
+            });
+            form.on('checkbox(choseAll)', function (data) {
+                $(this).closest('table').find("tbody input").each(function () {
+                    if (data.elem.checked) {
+                        $(this).prop('checked', true);
+                    } else {
+                        $(this).prop('checked', false);
+                    }
+                });
+                form.render('checkbox');
             });
         });
 

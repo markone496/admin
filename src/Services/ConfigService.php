@@ -89,7 +89,8 @@ class ConfigService
             $columns = DB::select("SELECT column_name, column_comment
                        FROM information_schema.columns
                        WHERE table_name = ?
-                       AND table_schema = ?", [$tableName, config('database.connections.mysql.database')]);
+                       AND table_schema = ?
+                       ORDER BY ordinal_position", [$tableName, config('database.connections.mysql.database')]);
             $columnsArray = [];
             foreach ($columns as $column){
                 $columnsArray[] = [

@@ -39,7 +39,7 @@ class SysConfigDataController extends BaseModelController
                 ['table' => 'sys_config', 'field' => 'updated_at', 'alias' => '', 'title' => '修改时间', 'width' => '170', 'fixed' => '', 'align' => 'center', 'sort' => '', 'option' => '', 'show_type' => '']
             ],
             'toolbar_config' => [
-                ['title' => '新增', 'event' => 'create', 'color' => '', 'function_id' => '']
+//                ['title' => '新增', 'event' => 'create', 'color' => '', 'function_id' => '']
             ],
             'tool_config' => [
                 ['bind' => '', 'title' => '详情', 'event' => 'info', 'color' => 'layui-btn-primary', 'function_id' => '12'],

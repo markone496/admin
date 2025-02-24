@@ -13,8 +13,6 @@ class SysOptionController extends Controller
 {
 
     const OPTION_COLOR = [
-        ['value' => 'layui-bg-null', 'title' => '无'],
-        ['value' => 'red', 'title' => '红'],
         ['value' => 'layui-bg-orange', 'title' => '橙'],
         ['value' => 'layui-bg-green', 'title' => '绿'],
         ['value' => 'layui-bg-cyan', 'title' => '青'],

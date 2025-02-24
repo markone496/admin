@@ -83,6 +83,11 @@
     text-overflow: ellipsis;
 }
 
+.layui-bg-null {
+    background: white;
+    color: black;
+}
+
 @media screen and (max-width: 546px) {
     /*日期组件显示不全*/
     .layui-laydate-range {
