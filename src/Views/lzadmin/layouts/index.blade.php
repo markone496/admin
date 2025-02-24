@@ -122,6 +122,7 @@
                                         layer.close(index);
                                     }
                                 });
+
                             });
                         } else if (obj.event === 'LAYTABLE_COLS') {
                             $('.layui-table-tool-panel').on('click', 'li', function () {
