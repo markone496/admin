@@ -142,7 +142,7 @@ class BaseModelController extends Controller
                 'align' => $item['align'],
                 'fixed' => $item['fixed'],
                 'sort' => $item['sort'],
-                'escape' => empty($item['sort']) ? false : true
+                'escape' => !empty($item['escape']) ? false : true
             ];
             if (!empty($item['show_type'])) {
                 $temp['escape'] = false;
@@ -319,7 +319,7 @@ class BaseModelController extends Controller
      * @param $cols
      * @return string
      */
-    private function getOrderByField($field, $cols)
+    public function getOrderByField($field, $cols)
     {
         $orderByField = '';
         foreach ($cols as $col) {
@@ -776,5 +776,6 @@ class BaseModelController extends Controller
             return $this->error($exception->getMessage());
         }
     }
+
 
 }
