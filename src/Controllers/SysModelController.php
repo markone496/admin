@@ -135,7 +135,7 @@ class SysModelController extends Controller
                     ['title' => '选项', 'field' => 'option', 'width' => 120, "option" => OptionService::all()],
                     ['title' => '类型', 'field' => 'type', 'width' => 120, "option" => self::OPTION_TYPE],
                     ['title' => '范围', 'field' => 'range', 'width' => 80, "option" => self::OPTION_SWITCH],
-                    ['title' => '模糊查询', 'field' => 'is_like', 'width' => 80, "option" => self::OPTION_SWITCH, 'value' => 1],
+                    ['title' => '模糊查询', 'field' => 'is_like', 'width' => 80, "option" => self::OPTION_SWITCH],
                     ['title' => '常用搜索', 'field' => 'show_const', 'width' => 100, "option" => self::OPTION_SWITCH, 'value' => 1],
                 ]
             ],

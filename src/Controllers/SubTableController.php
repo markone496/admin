@@ -76,7 +76,11 @@ class SubTableController extends BaseModelController
                             $value = explode(' - ', $value);
                             $query->whereBetween($field, $value);
                         } else {
-                            $query->where($field, $value);
+                            if ($item['is_like']) {
+                                $query->where($field, 'LIKE', '%' . $value . '%');
+                            } else {
+                                $query->where($field, $value);
+                            }
                         }
                     }
                 }
