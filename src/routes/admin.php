@@ -115,9 +115,6 @@ Route::domain($config['domain'])->group(function () {
                 Route::post('/model/{id}/update', [C\ModelController::class, 'update']);
                 Route::post('/model/{id}/delete', [C\ModelController::class, 'delete']);
 
-                /**** 分表 ****/
-                Route::get('/subTable/{id}', [C\SubTableController::class, 'indexView'])->where('id', '[0-9]+');
-                Route::post('/subTable/{id}/list', [C\SubTableController::class, 'getList'])->where('id', '[0-9]+');
             });
 
         });

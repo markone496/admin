@@ -88,6 +88,7 @@ class SysModelController extends Controller
                     ['title' => '外键', 'field' => 'field_1', 'width' => 100, "option" => []],
                     ['title' => '关联对象', 'field' => 'field_2', 'width' => 350, "option" => []],
                     ['title' => '同步IO', 'field' => 'synch_io', 'width' => 80, "option" => self::OPTION_SWITCH],
+                    ['title' => '是否分月', 'field' => 'is_month', 'width' => 80, "option" => self::OPTION_SWITCH],
                 ],
             ],
             'cols_config' => [

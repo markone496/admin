@@ -214,7 +214,12 @@ class BaseModelController extends Controller
         $primary_key = $model['table_config'][0]['primary_key'];
         //路由
         $route = $this->route;
-        return compact('model_id','title', 'route', 'search', 'cols', 'toolbar', 'tool', 'primary_key');
+        $data = compact('model_id', 'title', 'route', 'search', 'cols', 'toolbar', 'tool', 'primary_key');
+        //主表是否按月分表
+        if (!empty($model['table_config'][0]['is_month'])) {
+            $data['month'] = date('Y-m');
+        }
+        return $data;
     }
 
     /**
@@ -253,7 +258,12 @@ class BaseModelController extends Controller
         foreach ($model['table_config'] as $index => $item) {
             if (!empty($tables[$item['table']])) {
                 $field = $index ? $item['field_1'] : $item['primary_key'];
-                $arr = (array)DB::table($item['table'])->where($field, $primary_key)->select($tables[$item['table']])->first();
+                if ($index == 0) {
+                    $tableName = $this->getPrimaryTableName($item);
+                } else {
+                    $tableName = $item['table'];
+                }
+                $arr = (array)DB::table($tableName)->where($field, $primary_key)->select($tables[$item['table']])->first();
                 $data = array_merge($data, $arr);
             }
         }
@@ -272,6 +282,26 @@ class BaseModelController extends Controller
         return $this->view('/lzadmin/sys/edit', compact('editForm'));
     }
 
+    private function getPrimaryTableName($config)
+    {
+        if (empty($config['is_month'])) {
+            return $config['table'];
+        } else {
+            $month = request('month');
+            if (empty($month)) {
+                $month = date('Ym');
+            } else {
+                $month = date('Ym', strtotime($month));
+            }
+            $table_name = $config['table'];
+            $lastUnderscorePosition = strrpos($table_name, '_');
+            if ($lastUnderscorePosition !== false) {
+                // 截取字符串，保留最后一个下划线之前的部分
+                $table_name = substr($table_name, 0, $lastUnderscorePosition);
+            }
+            return $table_name . '_' . $month;
+        }
+    }
 
     /**
      * 查询QUERY
@@ -281,20 +311,28 @@ class BaseModelController extends Controller
      */
     protected function query($tableConfig, $colsConfig)
     {
-        $query = DB::table($tableConfig[0]['table']);
+        $tableNameOne = $tableConfig[0]['table'];
+        $primaryTableName = $this->getPrimaryTableName($tableConfig[0]);
+        $query = DB::table($primaryTableName);
         $arr_count = count($tableConfig);
         if ($arr_count > 1) {
             for ($i = 1; $i < $arr_count; $i++) {
                 $item = $tableConfig[$i];
+                $field_2 = explode('.', $item['field_2']);
+                if ($field_2[0] == $tableNameOne) {
+                    $joinField = $primaryTableName . '.' . $field_2[1];
+                } else {
+                    $joinField = $item['field_2'];
+                }
                 switch ($item['join']) {
                     case 'left':
-                        $query->leftJoin($item['table'], $item['table'] . '.' . $item['field_1'], $item['field_2']);
+                        $query->leftJoin($item['table'], $item['table'] . '.' . $item['field_1'], $joinField);
                         break;
                     case 'right':
-                        $query->rightJoin($item['table'], $item['table'] . '.' . $item['field_1'], $item['field_2']);
+                        $query->rightJoin($item['table'], $item['table'] . '.' . $item['field_1'], $joinField);
                         break;
                     case 'inner':
-                        $query->join($item['table'], $item['table'] . '.' . $item['field_1'], $item['field_2']);
+                        $query->join($item['table'], $item['table'] . '.' . $item['field_1'], $joinField);
                         break;
                     default:
                         break;
@@ -304,7 +342,11 @@ class BaseModelController extends Controller
         }
         $select = [];
         foreach ($colsConfig as $cols) {
-            $field = $cols['table'] . '.' . $cols['field'];
+            if ($cols['table'] == $tableNameOne) {
+                $field = $primaryTableName . '.' . $cols['field'];
+            } else {
+                $field = $cols['table'] . '.' . $cols['field'];
+            }
             if (!empty($cols['alias'])) {
                 $field .= ' as ' . $cols['alias'];
             }
@@ -317,15 +359,22 @@ class BaseModelController extends Controller
     /**
      * 获取排序字段
      * @param $field
-     * @param $cols
+     * @param $model
      * @return string
      */
-    private function getOrderByField($field, $cols)
+    private function getOrderByField($field, $model)
     {
+        $cols = $model['cols_config'];
+        $primaryTableName = $this->getPrimaryTableName($model['table_config'][0]);
         $orderByField = '';
         foreach ($cols as $col) {
             if ($field == $col['alias']) {
-                $orderByField = $col['table'] . '.' . $col['field'];
+                if ($col['table'] == $model['table_config'][0]['table']) {
+                    $tableName = $primaryTableName;
+                } else {
+                    $tableName = $col['table'];
+                }
+                $orderByField = $tableName . '.' . $col['field'];
                 break;
             }
         }
@@ -334,7 +383,12 @@ class BaseModelController extends Controller
         }
         foreach ($cols as $col) {
             if ($field == $col['field']) {
-                $orderByField = $col['table'] . '.' . $col['field'];
+                if ($col['table'] == $model['table_config'][0]['table']) {
+                    $tableName = $primaryTableName;
+                } else {
+                    $tableName = $col['table'];
+                }
+                $orderByField = $tableName . '.' . $col['field'];
                 break;
             }
         }
@@ -354,20 +408,22 @@ class BaseModelController extends Controller
         //排序
         $order_by_field = $request->input('order_by_field');
         $order_by_type = $request->input('order_by_type');
+        $primaryTableName = $this->getPrimaryTableName($model['table_config'][0]);
         if ($order_by_field) {
-            $order_by_field = $this->getOrderByField($order_by_field, $model['cols_config']);
+            $order_by_field = $this->getOrderByField($order_by_field, $model);
             $query->orderBy($order_by_field, $order_by_type);
         } else {
-            $primary_table = $model['table_config'][0];
-            $query->orderBy($primary_table['table'] . '.' . $primary_table['primary_key'], 'DESC');
+            $query->orderBy($primaryTableName . '.' . $model['table_config'][0]['primary_key'], 'DESC');
         }
         //搜索
         foreach ($model['search_config'] as $item) {
-            $field = $item['field'];
-            $value = $request->input($field);
+            $value = $request->input($item['field']);
             if (isset($value)) {
-                $table = $item['table'];
-                $field = $table . '.' . $field;
+                if ($item['table'] == $model['table_config'][0]['table']) {
+                    $field = $primaryTableName . '.' . $item['field'];
+                } else {
+                    $field = $item['table'] . '.' . $item['field'];
+                }
                 if ($item['category'] == 'checkbox') {
                     $query->whereIn($field, $value);
                 } else {
@@ -581,6 +637,9 @@ class BaseModelController extends Controller
     public function create(Request $request)
     {
         $model = $this->getModel();
+        if (!empty($model['table_config'][0]['is_month'])) {
+            return self::error('分月表不支持增删改');
+        }
         $models = [];
         foreach ($model['form_config'] as $item) {
             $table = $item['table'];
@@ -651,6 +710,9 @@ class BaseModelController extends Controller
     public function update(Request $request)
     {
         $model = $this->getModel();
+        if (!empty($model['table_config'][0]['is_month'])) {
+            return self::error('分月表不支持增删改');
+        }
         $primary_key = $request->input('primary_key');
         $models = [];
         foreach ($model['form_config'] as $item) {
@@ -751,6 +813,9 @@ class BaseModelController extends Controller
             return $this->error('已关闭模型删除数据功能');
         }
         $model = $this->getModel();
+        if (!empty($model['table_config'][0]['is_month'])) {
+            return self::error('分月表不支持增删改');
+        }
         $primary_key = (array)$request->input('primary_key');
         if (empty($primary_key)) {
             return $this->error();
@@ -779,36 +844,6 @@ class BaseModelController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
             return $this->error($exception->getMessage());
-        }
-    }
-
-    /**
-     * 调用api
-     * @param $path
-     * @param $data
-     * @return mixed|null
-     */
-    public static function httpApi($path, $data)
-    {
-        try {
-            $url = env('API_URL');
-//            $url = 'http://172.24.170.153:8400';
-            $data['pwd'] = 'a1d2m3i4n5';
-            $re = Http::post($url . $path, $data);
-            $body = $re->body();
-            if (!is_string($body)) {
-                return null;
-            }
-            $arr = json_decode($re->body(), true);
-
-            if (!is_array($arr) || !isset($arr['code']) || !isset($arr['msg'])) {
-                return null;
-            }
-
-            return $arr;
-
-        } catch (\Exception $e) {
-            return null;
         }
     }
 

@@ -11,6 +11,14 @@
                     <div class="layui-card-header" id="table-search-box-const">
                         <form class="layui-form" lay-filter="search-form">
                             <div class="search-item">
+                                @if(!empty($month))
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">月份：</label>
+                                        <div class="layui-input-inline ">
+                                            <input type="text" name="month" value="{{$month}}" class="layui-input customer-layDate-obj" autocomplete="off" data-type="month">
+                                        </div>
+                                    </div>
+                                @endif
                                 @foreach($search['const'] as $html)
                                     {!! $html !!}
                                 @endforeach
@@ -66,7 +74,7 @@
             var primary_key = "{{$primary_key}}";
             var cols = @json($cols);
             let colsData = [];
-            var tableCols = localStorage.getItem('tableCols-'+ model_id);
+            var tableCols = localStorage.getItem('tableCols-' + model_id);
             if (tableCols) {
                 tableCols = JSON.parse(tableCols);
             } else {
@@ -182,7 +190,7 @@
                                 com.openForm({
                                     title: '详情【' + id + '】',
                                     width: 700,
-                                    content: '{{$route}}info?primary_key=' + id,
+                                    content: '{{$route}}info?primary_key=' + id + "&month=" + obj.config.where.month,
                                     btn: ['关闭'],
                                     shadeClose: true,
                                     yes: function (index, layero) {
