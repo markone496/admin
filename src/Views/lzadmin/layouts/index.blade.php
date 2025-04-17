@@ -187,10 +187,14 @@
                                     });
                                 });
                             } else if (event === 'info') {
+                                var url = '{{$route}}info?primary_key=' + id;
+                                if (obj.config.where.month) {
+                                    url = url + "&month=" + obj.config.where.month
+                                }
                                 com.openForm({
                                     title: '详情【' + id + '】',
                                     width: 700,
-                                    content: '{{$route}}info?primary_key=' + id + "&month=" + obj.config.where.month,
+                                    content: url,
                                     btn: ['关闭'],
                                     shadeClose: true,
                                     yes: function (index, layero) {
