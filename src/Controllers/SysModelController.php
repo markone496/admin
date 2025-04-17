@@ -65,11 +65,13 @@ class SysModelController extends Controller
     ];
 
     const OPTION_BTN_COLOR = [
-        ['value' => 'layui-bg-blue', 'title' => '蓝色'],
-        ['value' => 'layui-bg-orange', 'title' => '橙色'],
-        ['value' => 'layui-bg-red', 'title' => '红色'],
-        ['value' => 'layui-bg-purple', 'title' => '紫色'],
-        ['value' => 'layui-btn-primary', 'title' => '白色'],
+        ['value' => 'layui-bg-red', 'title' => '红'],
+        ['value' => 'layui-bg-orange', 'title' => '橙'],
+        ['value' => 'layui-bg-green', 'title' => '绿'],
+        ['value' => 'layui-bg-cyan', 'title' => '青'],
+        ['value' => 'layui-bg-blue', 'title' => '蓝'],
+        ['value' => 'layui-bg-gray', 'title' => '灰'],
+        ['value' => 'layui-btn-primary', 'title' => '白'],
     ];
 
     /**
