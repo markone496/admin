@@ -228,8 +228,8 @@ class BaseModelController extends Controller
      */
     public function indexView()
     {
-        $filePath = '/script/' . $this->model_id;
-        if (file_exists(resource_path('/views/lzadmin/' . $filePath . '.blade.php'))) {
+        $filePath = '/lzadmin//script/' . $this->model_id;
+        if (file_exists(resource_path('/views' . $filePath . '.blade.php'))) {
             $view = $filePath;
         } else {
             $view = 'lzadmin/layouts/index';
