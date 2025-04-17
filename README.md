@@ -71,7 +71,12 @@ OSS_CDN=
 php artisan lzadmin:db
 ```
 
-访问后台路由地址`admin.com`。默认开发者账号:`admin`、密码：`admin`。开发者账号只有 `APP_DEBUG=true` 时才可登录      
+访问后台路由地址`admin.com`。默认开发者账号:`admin`、密码：`admin`。开发者账号只有 `APP_DEBUG=true` 时才可登录 
+
+提示
+------------  
+
+如果模型自定义了事件，需要在`resources/views/lzadmin/script`里加入对应的脚本文件`模型ID.blade.php`、并实现自定义的方法。  
 
 
 
