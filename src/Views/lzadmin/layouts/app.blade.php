@@ -21,6 +21,7 @@
 <script src="{{customAsset('assets/base/crypto-js.min.js')}}"></script>
 <script src="{{customAsset('assets/base/xlsx.full.min.js')}}"></script>
 <script src="{{customAsset('assets/base/base.js')}}"></script>
+<script src="{{customAsset('assets/base/xmSelect.js')}}"></script>
 @yield('scripts')
 </body>
 </html>

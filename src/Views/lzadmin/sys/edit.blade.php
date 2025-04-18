@@ -23,7 +23,10 @@
         var call = null;
         layui.use(function () {
             var form = layui.form;
-
+            //渲染下拉多选框
+            $('.xmSelectObj').each(function () {
+                com.renderXmSelect(this);
+            });
             // 表单提交
             form.on('submit(submit)', function (data) {
                 call && call(data.field);

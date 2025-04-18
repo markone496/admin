@@ -425,20 +425,32 @@ class BaseModelController extends Controller
                 } else {
                     $field = $item['table'] . '.' . $item['field'];
                 }
-                if ($item['category'] == 'checkbox') {
-                    $query->whereIn($field, $value);
-                } else {
-                    if (!empty($item['range'])) {//范围搜索
+                switch ($item['search_type']) {
+                    case 1://模糊
+                        $query->where($field, 'LIKE', '%' . $value . '%');
+                        break;
+                    case 2://时间范围
                         $value = explode(' - ', $value);
                         $query->whereBetween($field, $value);
-                    } else {
-                        if ($item['is_like']) {
-                            $query->where($field, 'LIKE', '%' . $value . '%');
-                        } else {
-                            $query->where($field, $value);
-                        }
-                    }
+                        break;
+                    case 3://单包含
+                        $query->whereIn($field, $value);
+                        break;
+                    case 4:
+                        $query->where(function ($query) use ($field, $value) {
+                            if (!is_array($value)) {
+                                $value = explode(',', $value);
+                            }
+                            foreach ($value as $val) {
+                                $query->orWhereRaw("JSON_CONTAINS({$field}, '\"{$val}\"', '$')");
+                            }
+                        });
+                        break;
+                    default:
+                        $query->where($field, $value);
+                        break;
                 }
+
             }
         }
         return $this->layerPaginate($query);
@@ -665,6 +677,10 @@ class BaseModelController extends Controller
                 }
                 $value = json_encode($valueData, true);
             }
+            if ($item['category'] == 'xmSelect') {
+                $value = explode(',', $value);
+                $value = json_encode($value, true);
+            }
             if (empty($models[$table])) {
                 $models[$table] = [];
             }
@@ -739,12 +755,15 @@ class BaseModelController extends Controller
                 }
                 $value = json_encode($valueData, true);
             }
+            if ($item['category'] == 'xmSelect') {
+                $value = explode(',', $value);
+                $value = json_encode($value, true);
+            }
             if (empty($models[$table])) {
                 $models[$table] = [];
             }
             $models[$table][$field] = $value;
         }
-
         DB::beginTransaction();
         try {
             $primary_field = '';

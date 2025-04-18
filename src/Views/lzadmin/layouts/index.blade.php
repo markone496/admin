@@ -15,7 +15,9 @@
                                     <div class="layui-form-item">
                                         <label class="layui-form-label">月份：</label>
                                         <div class="layui-input-inline ">
-                                            <input type="text" name="month" value="{{$month}}" class="layui-input customer-layDate-obj" autocomplete="off" data-type="month">
+                                            <input type="text" name="month" value="{{$month}}"
+                                                   class="layui-input customer-layDate-obj" autocomplete="off"
+                                                   data-type="month">
                                         </div>
                                     </div>
                                 @endif
@@ -69,6 +71,10 @@
 @section('scripts')
     <script>
         layui.use(function () {
+            //渲染下拉多选框
+            $('.xmSelectObj').each(function () {
+                com.renderXmSelect(this);
+            });
             var dropdown = layui.dropdown;
             var model_id = "{{$model_id}}";
             var primary_key = "{{$primary_key}}";

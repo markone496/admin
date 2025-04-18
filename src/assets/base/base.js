@@ -196,6 +196,10 @@ var com = {
                         let range = $(obj).attr('data-range');
                         com.laydateRender(obj, type, range);
                     });
+                    //构建下拉多选框
+                    layero.find('.xmSelectObj').each(function () {
+                        com.renderXmSelect(this);
+                    });
                 }
                 , yes: function (index, layero) {
                     var field = form.val('other-search-form');
@@ -605,8 +609,41 @@ var com = {
                 layer.close(load);
             }
         }
-    }
+    },
+
+    /**
+     * 渲染下拉多选框
+     */
+    renderXmSelect: function (self) {
+        var xmSelect = layui.xmSelect;
+        //构建下拉多选框
+        var data = $(self).attr('data-data');
+        var value = $(self).attr('data-value');
+        var name = $(self).attr('data-name');
+        data = JSON.parse(data);
+        value = JSON.parse(value);
+        var option = [];
+        var chose = [];
+        $(data).each(function (index, item) {
+            let temp = {
+                name: item['title'],
+                value: item['value']
+            };
+            option.push(temp);
+            if (value.includes(item['value'])) {
+                chose.push(temp);
+            }
+        });
+        var obj = xmSelect.render({
+            name: name,
+            el: self,
+            data: option
+        });
+        obj.setValue(chose);
+
+    },
 };
+
 
 //符文本编辑器渲染
 $('.editor—wrapper').each(function () {

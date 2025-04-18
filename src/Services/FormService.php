@@ -34,6 +34,9 @@ class FormService
             case 'select':
                 $html = FormService::select($title, $field, $option, $is_block, $value, $required, $custom_class, $ban_edit);
                 break;
+            case 'xmSelect':
+                $html = FormService::xmSelect($title, $field, $option, $is_block, $value, $required, $custom_class, $ban_edit);
+                break;
             case 'radio':
                 $html = FormService::radio($title, $field, $option, $is_block, $value, $required, $custom_class, $ban_edit);
                 break;
@@ -229,7 +232,39 @@ class FormService
         foreach ($options as $option) {
             $temp .= '<input type="checkbox" ' . (!empty($ban_edit) ? ' disabled ' : '') . $required_text . ' name="' . $field . '[]" value="' . $option['value'] . '" title="' . $option['title'] . '" ' . (in_array($option['value'], $value) ? 'checked' : '') . '>';
         }
-        $temp .= '</select>';
+        $temp .= '</div></div>';
+        return $temp;
+    }
+
+    /**
+     * 复选框
+     * @param $title
+     * @param $field
+     * @param array $options
+     * @param bool $is_block
+     * @param array $value
+     * @param bool $required
+     * @param string $custom_class
+     * @param string $ban_edit
+     * @return string
+     */
+    public static function xmSelect($title, $field, $options = [], $is_block = false, $value = [], $required = false, $custom_class = '', $ban_edit = '')
+    {
+        if(empty($value)){
+            $value = [];
+        }
+        $temp = "<div class='layui-form-item'>";
+        $temp .= "<label class='layui-form-label'>";
+        $required_text = "";
+        if ($required) {
+            $required_text = "required lay-verify='required'";
+            $temp .= "<span class='required_option'>*</span>";
+        }
+        $temp .= $title . '：</label>';
+        $class = ($is_block ? 'layui-input-block' : 'layui-input-inline');
+        $options = json_encode(array_values($options));
+        $value = json_encode($value);
+        $temp .= "<div class='{$class} {$custom_class} xmSelectObj' data-data='{$options}'  data-value='{$value}' data-name='{$field}'>";
         $temp .= '</div></div>';
         return $temp;
     }

@@ -49,6 +49,7 @@ class SysModelController extends Controller
         ['value' => 'input', 'title' => '单行文本'],
         ['value' => 'textarea', 'title' => '多行文本'],
         ['value' => 'select', 'title' => '下拉框'],
+        ['value' => 'xmSelect', 'title' => '下拉多选框'],
         ['value' => 'radio', 'title' => '单选框'],
         ['value' => 'checkbox', 'title' => '复选框'],
         ['value' => 'layDate', 'title' => '日期时间'],
@@ -72,6 +73,13 @@ class SysModelController extends Controller
         ['value' => 'layui-bg-blue', 'title' => '蓝'],
         ['value' => 'layui-bg-gray', 'title' => '灰'],
         ['value' => 'layui-btn-primary', 'title' => '白'],
+    ];
+
+    const OPTION_SEARCH_TYPE = [
+        ['value' => 1, 'title' => '模糊'],
+        ['value' => 2, 'title' => '时间范围'],
+        ['value' => 3, 'title' => '单包含'],
+        ['value' => 4, 'title' => '多包含'],
     ];
 
     /**
@@ -137,8 +145,7 @@ class SysModelController extends Controller
                     ['title' => '分类', 'field' => 'category', 'width' => 120, "option" => self::OPTION_CATEGORY, 'value' => 'input'],
                     ['title' => '选项', 'field' => 'option', 'width' => 120, "option" => OptionService::all()],
                     ['title' => '类型', 'field' => 'type', 'width' => 120, "option" => self::OPTION_TYPE],
-                    ['title' => '范围', 'field' => 'range', 'width' => 80, "option" => self::OPTION_SWITCH],
-                    ['title' => '模糊查询', 'field' => 'is_like', 'width' => 80, "option" => self::OPTION_SWITCH],
+                    ['title' => '查询方式', 'field' => 'search_type', 'width' => 80, "option" => self::OPTION_SEARCH_TYPE],
                     ['title' => '常用搜索', 'field' => 'show_const', 'width' => 100, "option" => self::OPTION_SWITCH, 'value' => 1],
                 ]
             ],
