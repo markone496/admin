@@ -26,7 +26,7 @@ class DbCommand extends Command
                 return;
             }
         }
-        $path = base_path("vendor/lz/admin/src/admin.sql");
+        $path = base_path("vendor/markone496/admin/src/admin.sql");
         if (!file_exists($path)) {
             $this->error('sql文件不存在');
             return;
