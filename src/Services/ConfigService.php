@@ -69,7 +69,7 @@ class ConfigService
      */
     public static function tableRefreshCache()
     {
-        $tables = DB::select('SELECT table_name, table_comment
+        $tables = DB::select('SELECT TABLE_NAME, TABLE_COMMENT
                       FROM information_schema.tables
                       WHERE table_schema = ?', [config('database.connections.mysql.database')]);
         $tablesArray = [];
@@ -86,7 +86,7 @@ class ConfigService
         RedisService::del($key);
         foreach ($tablesArray as $item) {
             $tableName = $item['table_name'];
-            $columns = DB::select("SELECT column_name, column_comment
+            $columns = DB::select("SELECT COLUMN_NAME, COLUMN_COMMENT
                        FROM information_schema.columns
                        WHERE table_name = ?
                        AND table_schema = ?
