@@ -78,7 +78,7 @@ class RedisService
      */
     public static function lock($lockKey, $callback)
     {
-        if (!Redis::setnx($lockKey, 1, ['nx', 'ex' => 10])) {
+        if (!Redis::set($lockKey, 1, 'EX', 10, 'NX')) {
             return self::error('操作频繁');
         }
         try {
