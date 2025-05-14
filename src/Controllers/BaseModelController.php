@@ -134,6 +134,9 @@ class BaseModelController extends Controller
                 break;
         }
         foreach ($colsConfig as $item) {
+            if (!empty($item['function_id']) && !isAuth($item['function_id'])) {
+                continue;
+            }
             $field = empty($item['alias']) ? $item['field'] : $item['alias'];
             $temp = [
                 'field' => $field,
@@ -554,6 +557,9 @@ class BaseModelController extends Controller
     {
         $editForm = [];
         foreach ($config as $item) {
+            if (!empty($item['function_id']) && !isAuth($item['function_id'])) {
+                continue;
+            }
             $value = $item['value'] ?? null;
             $type = $item['type'] ?? null;
             $option = [];
