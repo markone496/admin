@@ -434,6 +434,7 @@ class BaseModelController extends Controller
                         $query->whereBetween($field, $value);
                         break;
                     case 3://单包含
+                        $value = explode(',', $value);
                         $query->whereIn($field, $value);
                         break;
                     case 4:

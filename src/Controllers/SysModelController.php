@@ -59,6 +59,13 @@ class SysModelController extends Controller
         ['value' => 'file', 'title' => '文件上传'],
     ];
 
+    const OPTION_CATEGORY_SEARCH = [
+        ['value' => 'input', 'title' => '单行文本'],
+        ['value' => 'select', 'title' => '下拉框'],
+        ['value' => 'xmSelect', 'title' => '下拉多选框'],
+        ['value' => 'layDate', 'title' => '日期时间'],
+    ];
+
     const OPTION_SHOW_TYPE = [
         ['value' => 'url', 'title' => '链接'],
         ['value' => 'image', 'title' => '单图'],
@@ -142,7 +149,7 @@ class SysModelController extends Controller
                     ['title' => '表名', 'field' => 'table', 'width' => 200, "option" => []],
                     ['title' => '字段', 'field' => 'field', 'width' => 120, "option" => []],
                     ['title' => '标题', 'field' => 'title', 'width' => 100, "option" => []],
-                    ['title' => '分类', 'field' => 'category', 'width' => 120, "option" => self::OPTION_CATEGORY, 'value' => 'input'],
+                    ['title' => '分类', 'field' => 'category', 'width' => 120, "option" => self::OPTION_CATEGORY_SEARCH, 'value' => 'input'],
                     ['title' => '选项', 'field' => 'option', 'width' => 120, "option" => OptionService::all()],
                     ['title' => '类型', 'field' => 'type', 'width' => 120, "option" => self::OPTION_TYPE],
                     ['title' => '查询方式', 'field' => 'search_type', 'width' => 80, "option" => self::OPTION_SEARCH_TYPE],
