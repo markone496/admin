@@ -858,6 +858,9 @@ class BaseModelController extends Controller
             }
             $models[$table][$field] = $value;
         }
+        if (empty($models)) {
+            return self::error('请填写需要修改的数据');
+        }
         DB::beginTransaction();
         try {
             $primary_field = '';
