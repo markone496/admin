@@ -114,6 +114,7 @@ Route::domain($config['domain'])->group(function () {
                 Route::post('/model/{id}/create', [C\ModelController::class, 'create']);
                 Route::post('/model/{id}/update', [C\ModelController::class, 'update']);
                 Route::post('/model/{id}/delete', [C\ModelController::class, 'delete']);
+                Route::post('/model/{id}/batchUpdate', [C\ModelController::class, 'batchUpdate']);
 
             });
 

@@ -77,7 +77,7 @@
                                                 </div>
                                             @elseif($key == 'toolbar_config')
                                                 <div class="layui-text-em" style="padding: 4px 0;">
-                                                    内置3个方法：新增【create】、批量删除【delete】、导出【export】
+                                                    内置4个方法：新增【create】、批量删除【delete】、导出【export】、批量设置【batchUpdate】
                                                 </div>
                                             @elseif($key == 'tool_config')
                                                 <div class="layui-text-em" style="padding: 4px 0;">
@@ -127,8 +127,8 @@
                                                                 <option value="">请选择</option>
                                                                 @foreach($data['option'] as $option)
                                                                     <option
-                                                                        @if($model[$data['field']] == $option['value']) selected
-                                                                        @endif value="{{$option['value']}}">{{$option['title']}}</option>
+                                                                            @if($model[$data['field']] == $option['value']) selected
+                                                                            @endif value="{{$option['value']}}">{{$option['title']}}</option>
                                                                 @endforeach
                                                             </select>
                                                         @endif

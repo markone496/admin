@@ -620,6 +620,15 @@ class BaseModelController extends Controller
                 }
             }
         }
+        if ($request->input('type') == 'batch') {
+            foreach ($formConfig as $key => &$item) {
+                $item['required'] = '';
+                if ($item['ban_edit'] == 1) {
+                    unset($formConfig[$key]);
+                    continue;
+                }
+            }
+        }
         $editForm = $this->edit($formConfig, $edit_status);
         return $this->view('/lzadmin/sys/edit', compact('editForm'));
     }
@@ -806,6 +815,80 @@ class BaseModelController extends Controller
         $datum = $query->first();
         $this->modelFormat($datum, $model);
         return $this->success($datum);
+    }
+
+    /**
+     * 批量修改
+     * @param Request $request
+     * @return array
+     * @throws \Exception
+     */
+    public function batchUpdate(Request $request)
+    {
+        $model = $this->getModel();
+        if (!empty($model['table_config'][0]['is_month'])) {
+            return self::error('分月表不支持增删改');
+        }
+        $ids = (array)$request->input('ids');
+        $models = [];
+        foreach ($model['form_config'] as $item) {
+            if (!empty($item['ban_edit'])) {
+                continue;
+            }
+            $table = $item['table'];
+            $field = $item['field'];
+            $tableValue = $request->input($table);
+            $value = $tableValue[$field] ?? null;
+            if (!isset($value)) {
+                continue;
+            }
+            if (in_array($item['category'], ['checkbox', 'imageUploadMultiple'])) {
+                $valueData = [];
+                foreach ($value as $val) {
+                    $valueData[] = $val;
+                }
+                $value = json_encode($valueData, true);
+            }
+            if ($item['category'] == 'xmSelect') {
+                $value = explode(',', $value);
+                $value = json_encode($value, true);
+            }
+            if (empty($models[$table])) {
+                $models[$table] = [];
+            }
+            $models[$table][$field] = $value;
+        }
+        DB::beginTransaction();
+        try {
+            $primary_field = '';
+            foreach ($model['table_config'] as $index => $item) {
+                if ($index == 0) {
+                    $primary_field = $item['table'] . '.' . $item['primary_key'];
+                }
+                if (!empty($models[$item['table']])) {
+                    if ($index == 0) {//主表
+                        $result = DB::table($item['table'])->whereIn($item['primary_key'], $ids)->update($models[$item['table']]);
+                        if (!$result) {
+                            throw new \Exception('数据保存失败');
+                        }
+                    } else {
+                        //判断是否开启同步IO
+                        if (empty($item['synch_io'])) {
+                            continue;
+                        }
+                        $result = DB::table($item['table'])->whereIn($item['field_1'], $ids)->update($models[$item['table']]);
+                        if (!$result) {
+                            throw new \Exception('数据保存失败');
+                        }
+                    }
+                }
+            }
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            return $this->error($exception->getMessage());
+        }
+        return $this->success();
     }
 
     /**

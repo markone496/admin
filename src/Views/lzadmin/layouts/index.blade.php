@@ -138,6 +138,33 @@
                                 });
 
                             });
+                        } else if (obj.event === 'batchUpdate') {
+                            let data = func.getCheckData();
+                            if (data.length === 0) {
+                                layer.msg('请先选择数据', {icon: 2});
+                                return false;
+                            }
+                            let ids = [];
+                            $(data).each(function (index, item) {
+                                ids[index] = item[primary_key];
+                            });
+                            com.openForm({
+                                title: '批量设置',
+                                content: '{{$route}}edit?type=batch',
+                                width: 700,
+                                callback: function (index, field) {
+                                    field.ids = ids;
+                                    com.post('{{$route}}batchUpdate', field, function (res) {
+                                        if (res.code) {
+                                            layer.msg(res.msg, {icon: 2});
+                                        } else {
+                                            layer.close(index);
+                                            func.reload();
+                                            layer.msg(res.msg, {icon: 1});
+                                        }
+                                    });
+                                }
+                            });
                         } else if (obj.event === 'LAYTABLE_COLS') {
                             $('.layui-table-tool-panel').on('click', 'li', function () {
                                 let data = {};
