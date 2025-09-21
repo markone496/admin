@@ -153,6 +153,9 @@ class BaseModelController extends Controller
             if (!empty($item['option'])) {
                 $temp['escape'] = false;
             }
+            if (!empty($item['event'])) {
+                $temp['event'] = $item['event'];
+            }
             $config[] = $temp;
         }
         if (!empty($tool)) {

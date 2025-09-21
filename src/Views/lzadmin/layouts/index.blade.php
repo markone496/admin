@@ -184,9 +184,14 @@
                         }
                     },
                     tool: function (obj, self) {
+                        console.log(obj,$(self).attr('data-data'));
+                        var eventData = $(self).attr('data-data');
+                        if(eventData === undefined){
+                            eventData = '[]';
+                        }
                         let data = obj.data;
                         let id = data[primary_key];
-                        var event_data = JSON.parse($(self).attr('data-data'));
+                        var event_data = JSON.parse(eventData);
 
                         function eventCall(event) {
                             if (event === 'update') {

@@ -90,7 +90,7 @@
                             com.openForm({
                                 title: '【' + data.title + '】配置',
                                 content: '/sys/model/config?id=' + id,
-                                width: 1500,
+                                width: 1600,
                                 callback: function (index, field) {
                                     field.id = id;
                                     com.post('/sys/model/updateConfig', field, function (res) {

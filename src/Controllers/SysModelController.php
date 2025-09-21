@@ -121,8 +121,9 @@ class SysModelController extends Controller
                     ['title' => '排序', 'field' => 'sort', 'width' => 80, "option" => self::OPTION_SWITCH],
                     ['title' => '选项', 'field' => 'option', 'width' => 120, "option" => OptionService::all()],
                     ['title' => '显示', 'field' => 'show_type', 'width' => 80, "option" => self::OPTION_SHOW_TYPE],
-                    ['title' => 'HTML显示', 'field' => 'escape', 'width' => 80, "option" => self::OPTION_SWITCH],
-                    ['title' => '权限ID', 'field' => 'function_id', 'width' => 100, "option" => []],
+                    ['title' => 'HTML', 'field' => 'escape', 'width' => 80, "option" => self::OPTION_SWITCH],
+                    ['title' => '事件', 'field' => 'event', 'width' => 80, "option" => []],
+                    ['title' => '权限', 'field' => 'function_id', 'width' => 100, "option" => []],
                 ],
             ],
             'toolbar_config' => [
