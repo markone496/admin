@@ -27,7 +27,6 @@ class AdminAuth
             if (!in_array($route, $routes)) {
                 throw new \Exception();
             }
-            return $next($request);
         } catch (\Exception $exception) {
             $method = $request->method();
             if ($method === 'GET') {
@@ -36,6 +35,6 @@ class AdminAuth
                 return new JsonResponse(['code' => 1, 'msg' => '无权访问'], 200);
             }
         }
-
+        return $next($request);
     }
 }

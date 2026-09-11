@@ -25,7 +25,7 @@ class AdminLogin
             if (!UserService::isSuperUser() && UserService::isDisable($user_id)) {
                 throw new \Exception('账号已被禁用');
             }
-            return $next($request);
+
         } catch (\Exception $exception) {
             $method = $request->method();
             if ($method === 'GET') {
@@ -34,6 +34,6 @@ class AdminLogin
                 return new JsonResponse(['code' => -1, 'msg' => $exception->getMessage()], 200);
             }
         }
-
+        return $next($request);
     }
 }

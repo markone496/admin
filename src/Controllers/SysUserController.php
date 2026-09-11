@@ -52,7 +52,7 @@ class SysUserController extends BaseModelController
             'form_config' => [
                 ['table' => 'sys_user', 'field' => 'nickname', 'title' => '昵称', 'category' => 'input', 'required' => '1', 'value' => '', 'option' => '', 'type' => 'text', 'ban_edit' => '2'],
                 ['table' => 'sys_user', 'field' => 'account', 'title' => '账号', 'category' => 'input', 'required' => '1', 'value' => '', 'option' => '', 'type' => 'text', 'ban_edit' => '2'],
-                ['table' => 'sys_user', 'field' => 'password_md5', 'title' => '密码', 'category' => 'input', 'required' => '1', 'value' => '888888', 'option' => '', 'type' => 'text', 'ban_edit' => '1'],
+                ['table' => 'sys_user', 'field' => 'password_md5', 'title' => '密码', 'category' => 'input', 'required' => '1', 'value' => '', 'option' => '', 'type' => 'text', 'ban_edit' => '1'],
                 ['table' => 'sys_user', 'field' => 'role_id', 'title' => '角色', 'category' => 'select', 'required' => '1', 'value' => '', 'option' => '2', 'type' => 'text', 'ban_edit' => ''],
                 ['table' => 'sys_user', 'field' => 'is_disable', 'title' => '是否禁用', 'category' => 'radio', 'required' => '1', 'value' => 0, 'option' => '1', 'type' => 'text', 'ban_edit' => ''],
             ]

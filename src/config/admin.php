@@ -60,7 +60,7 @@ return [
     | 默认admin、加密方法在lz\admin\Services::passwordEncryption
     |
     */
-    "dev_password" => env('DEV_PASSWORD', '86f3059b228c8acf99e69734b6bb32cc'),
+    "dev_password" => env('DEV_PASSWORD', '7e0505001b0aa527c486b4bb52f8955b'),
 
     /*
     |--------------------------------------------------------------------------

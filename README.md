@@ -71,7 +71,7 @@ OSS_CDN=
 php artisan lzadmin:db
 ```
 
-访问后台路由地址`admin.com`。默认开发者账号:`admin`、密码：`admin`。开发者账号只有 `APP_DEBUG=true` 时才可登录 
+访问后台路由地址`admin.com`。默认开发者账号:`admin`、密码：`Admin@123`。开发者账号只有 `APP_DEBUG=true` 时才可登录 
 
 提示
 ------------  

@@ -75,23 +75,17 @@ INSERT INTO `sys_function` VALUES (13, '编辑', '[\"sys/configData/edit\", \"sy
 -- ----------------------------
 DROP TABLE IF EXISTS `sys_log`;
 CREATE TABLE `sys_log`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '权限ID',
   `ip` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '访问IP',
   `user_id` bigint(20) NOT NULL COMMENT '用户ID',
   `route` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '路由',
   `params` json NULL COMMENT '参数',
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统-日志' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of sys_log
--- ----------------------------
-INSERT INTO `sys_log` VALUES ('127.0.0.1', 0, '/', '[]', '2024-12-03 08:49:05');
-INSERT INTO `sys_log` VALUES ('127.0.0.1', 0, 'sys/refreshCache', '[]', '2024-12-03 08:49:08');
-INSERT INTO `sys_log` VALUES ('127.0.0.1', 0, '/', '[]', '2024-12-03 08:49:10');
-INSERT INTO `sys_log` VALUES ('127.0.0.1', 0, 'sys/user', '[]', '2024-12-03 08:49:14');
-INSERT INTO `sys_log` VALUES ('127.0.0.1', 0, 'sys/user/list', '{\"page\": \"1\", \"limit\": \"20\", \"_token\": \"LE9ZZFv0pHYczQacDW3765RIXqSRJDioaF0QnXMm\"}', '2024-12-03 08:49:14');
-INSERT INTO `sys_log` VALUES ('127.0.0.1', 0, 'sys/role', '[]', '2024-12-03 08:49:15');
-INSERT INTO `sys_log` VALUES ('127.0.0.1', 0, 'sys/role/list', '{\"page\": \"1\", \"limit\": \"20\", \"_token\": \"LE9ZZFv0pHYczQacDW3765RIXqSRJDioaF0QnXMm\"}', '2024-12-03 08:49:15');
+
 
 -- ----------------------------
 -- Table structure for sys_menu

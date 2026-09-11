@@ -50,43 +50,53 @@ class IndexController extends Controller
         if (!captcha_check($code)) {
             return self::error('验证码输入错误', 2);
         }
-        if (env('APP_DEBUG')) {//如果是开发阶段，判断是否是开发账户
-            $config = config('admin');
-            if (UserService::passwordEncryption($account) == $config['dev_account'] && UserService::passwordEncryption($password) == $config['dev_password']) {
-                //存入session
-                $request->session()->put("user_id", 0);
-                return self::success();
-            }
-        }
-        $userModel = UserModel::query()->where('account', $account)->first();
-        if (empty($userModel)) {
-            return self::error('账号有误！请核对后登录', 2);
-        }
-        //检验状态
-        if ($userModel['is_disable']) {
-            return self::error('该账号已禁止登录', 2);
-        }
-        //判断今日密码是否输入错误三次
-        $passwordErrorKey = CacheKeyService::getLoginPasswordErrorTotal($account);
-        $err_num = (int)RedisService::get($passwordErrorKey);
-        if ($err_num > 2) {
-            return self::error('今日已禁止登录', 2);
-        }
-        //检验登录密码
-        if (UserService::passwordEncryption($password) !== $userModel['password_md5']) {
-            //设置错误次数
-            RedisService::set($passwordErrorKey, $err_num + 1, 86400);
-            $num = 2 - $err_num;
-            if ($num == 0) {
-                $msg = '尝试3次验证密码失败，今日禁止登录';
+        //todo 加锁避免重复请求
+        return RedisService::lock('admin-login:' . $account, function () use ($account, $password, $request) {
+            $user_id = null;
+            $user_password = null;
+            if (env('APP_DEBUG')) {//如果是开发阶段，判断是否是开发账户
+                $config = config('admin');
+                if (UserService::passwordEncryption($account) == $config['dev_account']) {
+                    $user_id = 0;
+                    $user_password = $config['dev_password'];
+                }
             } else {
-                $msg = '密码输入错误,今日还剩' . (2 - $err_num) . '次机会';
+                $userModel = UserModel::query()->where('account', $account)->first();
+                if (empty($userModel)) {
+                    return self::error('账号有误！请核对后登录', 2);
+                }
+                //检验状态
+                if ($userModel['is_disable']) {
+                    return self::error('该账号已禁止登录', 2);
+                }
+                $user_id = $userModel->id;
+                $user_password = $userModel['password_md5'];
             }
-            return self::error($msg, 2);
-        }
-        //存入session
-        $request->session()->put("user_id", $userModel['id']);
-        return self::success();
+            if (!isset($user_id) || !isset($user_password)) {
+                return self::error('账号有误！请核对后登录', 2);
+            }
+            //判断今日密码是否输入错误三次
+            $passwordErrorKey = CacheKeyService::getLoginPasswordErrorTotal($account);
+            $err_num = (int)RedisService::get($passwordErrorKey);
+            if ($err_num > 2) {
+                return self::error('今日已禁止登录', 2);
+            }
+            //检验登录密码
+            if (UserService::passwordEncryption($password) !== $user_password) {
+                //设置错误次数
+                RedisService::set($passwordErrorKey, $err_num + 1, 86400);
+                $num = 2 - $err_num;
+                if ($num == 0) {
+                    $msg = '尝试3次验证密码失败，今日禁止登录';
+                } else {
+                    $msg = '密码输入错误,今日还剩' . (2 - $err_num) . '次机会';
+                }
+                return self::error($msg, 2);
+            }
+            //存入session
+            $request->session()->put("user_id", $user_id);
+            return true;
+        });
     }
 
     /**

@@ -65,10 +65,43 @@ if (!function_exists('customVerifyAccount')) {
 if (!function_exists('customVerifyPassword')) {
     function customVerifyPassword($password)
     {
-        if (!preg_match("/^[0-9a-z_]{5,20}$/i", $password)) {
-            return '请输入5-20位密码，字符仅限于A-Za-z0-9_';
+        try {
+            // 长度校验：8-20 位（按字符数计算）
+            $len = mb_strlen($password, 'UTF-8');
+            if ($len < 8 || $len > 20) {
+                throw new Exception('');
+            }
+
+            // 允许的特殊符号集合（可根据业务调整）
+            $allowedSpecialChars = '!@#$%';
+
+            // 1. 必须包含大写字母
+            if (!preg_match('/[A-Z]/', $password)) {
+                throw new Exception('');
+            }
+            // 2. 必须包含小写字母
+            if (!preg_match('/[a-z]/', $password)) {
+                throw new Exception('');
+            }
+            // 3. 必须包含数字
+            if (!preg_match('/[0-9]/', $password)) {
+                throw new Exception('');
+            }
+
+            // 4. 必须包含至少一个允许的特殊符号
+            $specialPattern = '/[' . preg_quote($allowedSpecialChars, '/') . ']/';
+            if (!preg_match($specialPattern, $password)) {
+                throw new Exception('');
+            }
+            // 5. 密码中不允许出现允许字符集之外的字符
+            $allowedPattern = '/^[A-Za-z0-9' . preg_quote($allowedSpecialChars, '/') . ']+$/';
+            if (!preg_match($allowedPattern, $password)) {
+                throw new Exception('');
+            }
+            return false;
+        } catch (\Throwable $exception) {
+            return '请输入8-20位密码，必须包含大小写字母数字和特殊符号。字符仅限于!@#$%';
         }
-        return false;
     }
 }
 
