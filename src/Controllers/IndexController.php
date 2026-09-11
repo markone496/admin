@@ -60,7 +60,9 @@ class IndexController extends Controller
                     $user_id = 0;
                     $user_password = $config['dev_password'];
                 }
-            } else {
+            }
+            //todo 如果不是开发者账号，检测是否是系统账号
+            if($user_id === null){
                 $userModel = UserModel::query()->where('account', $account)->first();
                 if (empty($userModel)) {
                     return self::error('账号有误！请核对后登录', 2);
@@ -71,9 +73,6 @@ class IndexController extends Controller
                 }
                 $user_id = $userModel->id;
                 $user_password = $userModel['password_md5'];
-            }
-            if (!isset($user_id) || !isset($user_password)) {
-                return self::error('账号有误！请核对后登录', 2);
             }
             //判断今日密码是否输入错误三次
             $passwordErrorKey = CacheKeyService::getLoginPasswordErrorTotal($account);
