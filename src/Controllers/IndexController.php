@@ -36,11 +36,8 @@ class IndexController extends Controller
         if ($verify_msg = customVerifyAccount($account)) {
             return self::error($verify_msg);
         }
-        if ($password = customDecrypt($password)) {
-            if ($verify_msg = customVerifyPassword($password)) {
-                return self::error($verify_msg);
-            }
-        } else {
+        $password = customDecrypt($password);
+        if (!$password) {
             return self::error('密码解析失败');
         }
         if (!preg_match("/^[0-9a-z]{4}$/i", $code)) {
@@ -62,7 +59,7 @@ class IndexController extends Controller
                 }
             }
             //todo 如果不是开发者账号，检测是否是系统账号
-            if($user_id === null){
+            if ($user_id === null) {
                 $userModel = UserModel::query()->where('account', $account)->first();
                 if (empty($userModel)) {
                     return self::error('账号有误！请核对后登录', 2);
