@@ -38,6 +38,7 @@ class CacheKeyService
     //登录密码输入错误
     public static function getLoginPasswordErrorTotal($account)
     {
+        $account = strtolower($account);
         return 'password-error:' . date('Y-m-d') . ':' . $account;
     }
 
