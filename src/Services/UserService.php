@@ -121,7 +121,9 @@ class UserService
         $function_ids = self::getLoginUserFunctionIds();
         foreach ($function_ids as $function_id) {
             $function = FunctionService::getFunctionById($function_id);
-            $menu_ids = array_merge($menu_ids, $function['menu_ids']);
+            if(!empty($function)){
+                $menu_ids = array_merge($menu_ids, $function['menu_ids']);
+            }
         }
         return array_unique($menu_ids);
     }
@@ -136,7 +138,9 @@ class UserService
         $routes = [];
         foreach ($function_ids as $function_id) {
             $function = FunctionService::getFunctionById($function_id);
-            $routes = array_merge($routes, $function['route']);
+            if(!empty($function)){
+                $routes = array_merge($routes, $function['route']);
+            }
         }
         return $routes;
     }
